@@ -1,0 +1,11 @@
+pdb_id,protein,variant,morphology,n_protofilaments,label,source,notes
+7Q4B,Amyloid-beta,Abeta42,single,1,0,Brain-derived,Type I brain-derived fold
+2NAO,Amyloid-beta,Abeta42,multi,2,1,In vitro NMR,Double-horseshoe doublet
+6W06,Amyloid-beta,Abeta40,single,1,0,In vitro,Single protofilament
+2M4J,Amyloid-beta,Abeta40,multi,3,1,In vitro NMR,3-fold symmetric triplet
+8RRR,Alpha-synuclein,WT,single,1,0,Brain-derived,Lewy fold
+6XYO,Alpha-synuclein,WT,multi,2,1,MSA patient,MSA Type I doublet
+7P6A,Tau,3R,single,1,0,Pick's disease,Single protofilament
+5O3L,Tau,3R/4R,multi,2,1,Alzheimer's disease,Paired helical filament (PHF) doublet
+7P0V,Beta-2-microglobulin,WT,single,1,0,In vitro,Single filament
+6GK3,Beta-2-microglobulin,WT,multi,2,1,In vitro,Doublet
