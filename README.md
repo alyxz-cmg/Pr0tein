@@ -46,19 +46,75 @@ Full metadata is in [`data/labels.csv`](data/labels.csv).
 ## 📁 Repository Structure
 
 ```
-amyloid-morphology-predictor/
+Pr0tein/
 ├── data/
-│   ├── labels.csv          # Core dataset (PDB IDs + binary labels)
+│   ├── alphafold/                 # AlphaFold CIF structures (downloaded)
+│   │   ├── AF-P05067-F1.cif
+│   │   ├── AF-P10636-F1.cif
+│   │   ├── AF-P37840-F1.cif
+│   │   └── AF-P61769-F1.cif
+│   ├── labels.csv                 # Core dataset (PDB IDs + binary labels)
+│   ├── processed/                 # Engineered feature matrices
+│   │   ├── features.csv           # Final merged dataset
+│   │   ├── sequence_features.csv
+│   │   └── structure_features.csv
 │   └── raw/
-│       ├── sequences/      # FASTA files (fetched)
-│       └── structures/     # PDB files (fetched)
+│       ├── sequences/             # FASTA files (RCSB fetched)
+│       │   ├── 2M4J.fasta
+│       │   ├── 2NAO.fasta
+│       │   ├── 5O3L.fasta
+│       │   ├── 6GK3.fasta
+│       │   ├── 6W06.fasta
+│       │   ├── 6XYO.fasta
+│       │   ├── 7P0V.fasta
+│       │   ├── 7P6A.fasta
+│       │   ├── 7Q4B.fasta
+│       │   └── 8RRR.fasta
+│       └── structures/            # PDB files (RCSB fetched)
+│           ├── 2M4J.pdb
+│           ├── 2NAO.pdb
+│           ├── 5O3L.pdb
+│           ├── 6GK3.pdb
+│           ├── 6W06.pdb
+│           ├── 6XYO.pdb
+│           ├── 7P0V.pdb
+│           ├── 7P6A.pdb
+│           ├── 7Q4B.pdb
+│           └── 8RRR.pdb
+│
+├── notebooks/
+│   ├── 02_feature_engineering.ipynb
+│   └── 03_results_analysis.ipynb
+│
+├── results/
+│   ├── best_model.pkl
+│   ├── loocv_metrics.csv
+│   ├── loocv_predictions.csv
+│   ├── REPORT.md
+│   ├── feature_correlation.png
+│   ├── feature_distributions.png
+│   ├── confusion_matrix_*.png
+│   ├── feature_importance_*.png
+│   ├── shap_bar_LogisticRegression.png
+│   ├── shap_force_multi.png
+│   ├── shap_force_single.png
+│   └── shap_summary_LogisticRegression.png
+│
 ├── src/
-│   ├── config.py           # Paths, constants
-│   └── fetch_data.py       # NCBI / RCSB fetcher
-├── notebooks/              # Exploration & analysis
-├── results/                # Figures, metrics, trained models
+│   ├── build_features.py
+│   ├── config.py
+│   ├── fetch_data.py
+│   ├── fetch_alphafold.py
+│   ├── sequence_features.py
+│   ├── structure_features.py
+│   ├── train_model.py
+│   ├── explain_model.py
+│   ├── generate_report.py
+│   └── __init__.py
+│
 ├── requirements.txt
-└── README.md
+├── README.md
+└── LICENSE
 ```
 
 ## 🚀 Setup & Quickstart
