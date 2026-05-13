@@ -125,6 +125,55 @@ Outputs:
 - **No external DSSP binary** required: we use Biotite's `annotate_sse`
   for SS and `freesasa` (pure Python) for SASA.
 
+## Model Training, Explainability & Reporting
+
+### Run the full intelligence layer
+```bash
+python -m src.train_model        # LOOCV training + metrics + figures
+python -m src.explain_model      # SHAP summary + force plots
+python -m src.generate_report    # Auto-builds results/REPORT.md
+```
+
+### What's produced
+| File | Contents |
+|---|---|
+| `results/loocv_metrics.csv` | Accuracy / F1 / ROC-AUC for LR, DT, RF |
+| `results/loocv_predictions.csv` | Per-PDB y_true, y_pred, proba_multi, correct |
+| `results/confusion_matrix_*.png` | Per-model 2×2 confusion |
+| `results/feature_importance_*.png` | Coefficient or impurity importance |
+| `results/shap_summary_*.png` | Global SHAP beeswarm (best model) |
+| `results/shap_force_{single,multi}.png` | Per-protein waterfall plots |
+| `results/best_model.pkl` | Pickled pipeline (impute → scale → clf) |
+| `results/REPORT.md` | Auto-generated final report |
+
+### Validation choice — LOOCV
+With n=10, a 5-fold split would put 2 proteins in each test fold, making
+metrics extremely sensitive to the random shuffle. LOOCV is deterministic
+(no seed bias), maximizes training data per fold (9/10), and is the
+canonical small-sample CV for structural biology. This directly addresses
+*"Overfitting: small sample size may cause overfitting → use simple models,
+cross-validation, and limit feature dimensionality"* in §7 of the
+deep-research report.
+
+### Explainability — coefficients + SHAP
+- **scikit-learn coefficients / feature importances** answer *"which
+  features matter on average?"* (the **Student B** lens).
+- **SHAP** answers *"why was THIS specific protein classified this way?"*
+  — exactly the per-sample insight **Student A** needs to discuss
+  biological outliers (e.g., a Tau PHF that the model misclassifies because
+  its monomer hydrophobicity profile resembles a single-protofilament
+  fold).
+
+### Known limitations (carried into the report)
+- pLDDT-derived features (`plddt_mean`, `plddt_median`, `frac_disordered`)
+  are dropped — the AlphaFold v6 mmCIF format moved pLDDT out of the
+  B-factor field into a `_ma_qa_metric_local` block. Not a Step-3 blocker;
+  Rg, SS%, and SASA remain.
+- Same-UniProt rows share structural features (4× APP, 2× α-syn, 2× tau,
+  2× β2m). Discrimination within a UniProt group depends on sequence
+  features. The classifier still has to learn a consistent decision
+  boundary across all four proteins, which is the genuine ML challenge.
+
 ## 👥 Team Roles
 
 | Student | Focus | Step 1 Responsibilities |
