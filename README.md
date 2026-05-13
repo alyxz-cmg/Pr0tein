@@ -85,6 +85,46 @@ python -m src.fetch_data
 After the fetch completes, you should see FASTA files in
 `data/raw/sequences/` and PDB files in `data/raw/structures/`.
 
+## Feature Engineering
+
+We extract three feature families per protein and merge them into a single
+matrix at `data/processed/features.csv`.
+
+### Why AlphaFold-predicted monomers?
+Following the recommendation in our research notes, we include monomer
+structures from the **AlphaFold Protein Structure Database (EBI)** to enable
+biologically meaningful descriptors (SASA, Rg, secondary-structure content)
+that pure sequence features cannot capture. PDB IDs `9LIW` and `9D23` were
+**excluded** because they are not yet publicly released and break the
+automated pipeline; the 10 confirmed IDs from Step 1 remain the core dataset.
+
+### Feature families
+
+| Family | Examples | Source |
+|--------|----------|--------|
+| **Sequence** | length, AA composition (20-d), %hydrophobic/polar/charged/aromatic | `src/sequence_features.py` |
+| **Physicochemical** | GRAVY, pI, net charge @ pH7, aromaticity, instability index | Biopython `ProteinAnalysis` |
+| **Structural (AF monomer)** | Rg, mean/median pLDDT, %disordered, helix/sheet/coil %, total/polar/hydrophobic SASA | `src/structure_features.py` |
+
+### Run it
+```bash
+python -m src.build_features
+```
+Outputs:
+- `data/processed/sequence_features.csv`
+- `data/processed/structure_features.csv`
+- `data/processed/features.csv`  ← used in Step 3
+
+### Notes
+- **pLDDT as disorder proxy:** AF stores per-atom pLDDT in the B-factor
+  column. Low pLDDT in monomeric amyloidogenic proteins (Aβ, α-syn, tau) is
+  expected and biologically informative.
+- **UniProt mapping:** Each PDB → parent UniProt (`PDB_TO_UNIPROT` in
+  `config.py`). Multiple PDBs share a UniProt (e.g., 4× APP entries) — they
+  receive identical structural features but distinct sequence/label rows.
+- **No external DSSP binary** required: we use Biotite's `annotate_sse`
+  for SS and `freesasa` (pure Python) for SASA.
+
 ## 👥 Team Roles
 
 | Student | Focus | Step 1 Responsibilities |
