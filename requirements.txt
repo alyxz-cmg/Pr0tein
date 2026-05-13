@@ -17,3 +17,5 @@ ipykernel==6.29.4
 requests==2.31.0
 tqdm==4.66.4
 python-dotenv==1.0.1
+
+pip install shap==0.45.1
