@@ -153,7 +153,8 @@ def main():
     print("\n=== LOOCV Summary ===")
     print(metrics_df.to_string(index=False))
 
-    best_name = metrics_df.iloc[0]["model"]
+    candidates = metrics_df[metrics_df["model"] != "Majority"]
+    best_name = candidates.sort_values(["f1", "roc_auc"], ascending=False).iloc[0]["model"]
     best = make_models()[best_name].fit(X, y)
     with open(TRAINED_MODEL_PKL, "wb") as f:
         pickle.dump({"name": best_name, "model": best,
