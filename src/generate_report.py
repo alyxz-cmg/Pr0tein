@@ -59,7 +59,7 @@ F1 = {best['f1']:.3f}, ROC-AUC = {best['roc_auc']:.3f}).
 
 {_table(misses) if len(misses) else "_None — all 10 samples classified correctly._"}
 
-> Action for **Student A**: examine the structural details of the misses
+> TODO: examine the structural details of the misses
 > above. Are they "twisted vs. flat" doublets? Brain-derived vs. in vitro?
 > These outliers are the most informative entries for biological discussion.
 
