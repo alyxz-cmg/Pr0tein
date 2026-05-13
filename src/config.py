@@ -38,3 +38,17 @@ AROMATIC = set("FWY")
 
 for d in (SEQ_DIR, STRUCT_DIR, AF_DIR, PROCESSED_DIR, RESULTS_DIR):
     d.mkdir(parents=True, exist_ok=True)
+
+LOOCV_METRICS_CSV = RESULTS_DIR / "loocv_metrics.csv"
+LOOCV_PREDS_CSV = RESULTS_DIR / "loocv_predictions.csv"
+TRAINED_MODEL_PKL = RESULTS_DIR / "best_model.pkl"
+REPORT_MD = RESULTS_DIR / "REPORT.md"
+
+NON_FEATURE_COLS = [
+    "pdb_id", "label", "protein", "variant", "morphology",
+    "n_protofilaments", "source", "notes", "sequence",
+    "uniprot", "af_available",
+]
+
+# Drop due to extraction issues
+DROP_FEATURE_COLS = ["plddt_mean", "plddt_median", "frac_disordered"]
