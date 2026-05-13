@@ -10,22 +10,26 @@ from tqdm import tqdm
 
 from src.config import LABELS_CSV, AF_DIR, PDB_TO_UNIPROT
 
-AF_URL = "https://alphafold.ebi.ac.uk/files/AF-{uniprot}-F1-model_v4.cif"
+AF_URL_TEMPLATES = [
+    "https://alphafold.ebi.ac.uk/files/AF-{uniprot}-F1-model_v6.cif",
+]
 
 
 def fetch_af_model(uniprot: str) -> bool:
     out = AF_DIR / f"AF-{uniprot}-F1.cif"
-    if out.exists():
+    if out.exists() and out.stat().st_size > 1000:
         return True
-    try:
-        r = requests.get(AF_URL.format(uniprot=uniprot), timeout=60)
-        if r.ok and "data_" in r.text[:200]:
-            out.write_text(r.text)
-            return True
-        print(f"[WARN] AF model not available: {uniprot} ({r.status_code})",
-              file=sys.stderr)
-    except requests.RequestException as e:
-        print(f"[WARN] {uniprot}: {e}", file=sys.stderr)
+    for url in AF_URL_TEMPLATES:
+        try:
+            r = requests.get(url.format(uniprot=uniprot), timeout=60)
+            if r.ok and "data_" in r.text[:200]:
+                out.write_text(r.text)
+                print(f"  ✓ {uniprot} ← {url.rsplit('-', 1)[-1]}")
+                return True
+        except requests.RequestException as e:
+            print(f"[WARN] {uniprot} ({url}): {e}", file=sys.stderr)
+    print(f"[WARN] AF model not available for {uniprot} (tried v5, v4)",
+          file=sys.stderr)
     return False
 
 

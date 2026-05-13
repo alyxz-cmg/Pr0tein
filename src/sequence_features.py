@@ -53,7 +53,7 @@ def extract(seq: str) -> dict:
         "aromaticity": pa.aromaticity(),
         "instability_index": pa.instability_index(),
     }
-    aa_pct = pa.get_amino_acids_percent()
+    aa_pct = pa.amino_acids_percent
     for aa in AA_ALPHABET:
         feats[f"aa_{aa}"] = aa_pct.get(aa, 0.0)
     return feats
@@ -62,6 +62,7 @@ def extract(seq: str) -> dict:
 def main():
     df = pd.read_csv(LABELS_CSV)
     rows = []
+
     for _, row in df.iterrows():
         pdb_id = row["pdb_id"].upper()
         fasta = SEQ_DIR / f"{pdb_id}.fasta"
@@ -72,12 +73,18 @@ def main():
         rows.append(feats)
 
     out = pd.DataFrame(rows)
+
+    if out.empty:
+        raise ValueError("No sequence features were generated.")
+
     cols = ["pdb_id"] + [c for c in out.columns if c not in ("pdb_id", "sequence")] + ["sequence"]
     out = out[cols]
+
     out.to_csv(SEQ_FEATURES_CSV, index=False)
     print(f"✅ Saved {len(out)} rows × {out.shape[1]} cols → {SEQ_FEATURES_CSV}")
-    print(out[["pdb_id", "length", "gravy", "pI", "frac_hydrophobic"]].to_string(index=False))
 
-
+    preview_cols = [c for c in ["pdb_id", "length", "gravy", "pI", "frac_hydrophobic"] if c in out.columns]
+    print(out[preview_cols].to_string(index=False))
+    
 if __name__ == "__main__":
     main()

@@ -20,6 +20,15 @@ def main():
     print("\n[1/4] Fetching AlphaFold monomer models...")
     fetch_alphafold.main()
 
+    from src.config import AF_DIR
+    cifs = list(AF_DIR.glob("AF-*.cif"))
+    if not cifs:
+        print("\n❌ No AlphaFold CIFs were downloaded. Aborting before structure step.")
+        print("   Check your internet connection and AlphaFold DB availability,")
+        print("   then re-run: python -m src.fetch_alphafold")
+        return
+    print(f"   Found {len(cifs)} CIF file(s) in {AF_DIR}")
+
     print("\n[2/4] Extracting sequence features...")
     sequence_features.main()
 

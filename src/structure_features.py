@@ -45,7 +45,10 @@ def _radius_of_gyration(atoms) -> float:
 def _plddt_stats(atoms) -> dict:
     # In AF mmCIFs, pLDDT is stored in the B-factor field (per-atom).
     ca_mask = atoms.atom_name == "CA"
-    plddt = atoms.b_factor[ca_mask]
+    if "b_factor" in atoms.get_annotation_categories():
+        plddt = atoms.get_annotation("b_factor").mean()
+    else:
+        plddt = float("nan")
     return {
         "plddt_mean": float(np.mean(plddt)),
         "plddt_median": float(np.median(plddt)),
@@ -77,8 +80,9 @@ def _sasa_features(cif_path: Path, atoms) -> dict:
         pdb_file.write(f.name)
         tmp = f.name
 
+    freesasa.setVerbosity(freesasa.silent)
     structure = freesasa.Structure(tmp)
-    result = freesasa.Calc().calculate(structure)
+    result = freesasa.calc(structure)
     total = result.totalArea()
 
     # Per-residue SASA → split by hydrophobicity of residue type
