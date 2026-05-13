@@ -12,7 +12,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from sklearn.model_selection import LeaveOneOut
+from sklearn.model_selection import LeaveOneGroupOut, LeaveOneOut
+from sklearn.dummy import DummyClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
@@ -44,45 +45,44 @@ def load_features():
 
 
 def make_models():
-    """Return three pipelines (impute → scale → classify)."""
     base = lambda clf: Pipeline([
         ("impute", SimpleImputer(strategy="median")),
         ("scale",  StandardScaler()),
         ("clf",    clf),
     ])
     return {
-        "LogisticRegression": base(LogisticRegression(
-            max_iter=5000, C=1.0, random_state=RANDOM_STATE)),
-        "DecisionTree": base(DecisionTreeClassifier(
-            max_depth=4, random_state=RANDOM_STATE)),
-        "RandomForest": base(RandomForestClassifier(
-            n_estimators=200, max_depth=4, random_state=RANDOM_STATE)),
+        "Majority":           base(DummyClassifier(strategy="most_frequent")),
+        "LogisticRegression": base(LogisticRegression(max_iter=5000, C=1.0,
+                                                      random_state=RANDOM_STATE)),
+        "DecisionTree":       base(DecisionTreeClassifier(max_depth=4,
+                                                          random_state=RANDOM_STATE)),
+        "RandomForest":       base(RandomForestClassifier(n_estimators=200, max_depth=4,
+                                                          random_state=RANDOM_STATE)),
     }
 
+def loocv_evaluate(model, X, y, pdb_ids, model_name, groups=None):
+    if groups is not None:
+        cv = LeaveOneGroupOut()
+        splits = cv.split(X, y, groups)
+    else:
+        cv = LeaveOneOut()
+        splits = cv.split(X)
 
-def loocv_evaluate(model, X, y, pdb_ids, model_name):
-    """Run LOOCV; return preds, probas, fold-by-fold records."""
-    loo = LeaveOneOut()
-    y_pred = np.zeros_like(y)
-    y_proba = np.zeros(len(y), dtype=float)
+    y_pred = np.zeros_like(y); y_proba = np.zeros(len(y), dtype=float)
     records = []
-
-    for train_idx, test_idx in loo.split(X):
+    for train_idx, test_idx in splits:
         X_tr, X_te = X.iloc[train_idx], X.iloc[test_idx]
-        y_tr, y_te = y[train_idx], y[test_idx]
+        y_tr = y[train_idx]
         model.fit(X_tr, y_tr)
-        pred = int(model.predict(X_te)[0])
-        proba = float(model.predict_proba(X_te)[0, 1])
-        y_pred[test_idx[0]] = pred
-        y_proba[test_idx[0]] = proba
-        records.append({
-            "model": model_name,
-            "pdb_id": pdb_ids[test_idx[0]],
-            "y_true": int(y_te[0]),
-            "y_pred": pred,
-            "proba_multi": proba,
-            "correct": int(pred == y_te[0]),
-        })
+        for i in test_idx:
+            pred = int(model.predict(X.iloc[[i]])[0])
+            proba = float(model.predict_proba(X.iloc[[i]])[0, 1])
+            y_pred[i] = pred; y_proba[i] = proba
+            records.append({
+                "model": model_name, "pdb_id": pdb_ids[i],
+                "y_true": int(y[i]), "y_pred": pred,
+                "proba_multi": proba, "correct": int(pred == y[i]),
+            })
     return y_pred, y_proba, records
 
 
@@ -118,11 +118,15 @@ def main():
     X, y, pdb_ids, feature_names = load_features()
     models = make_models()
 
+    df_full = pd.read_csv(FEATURES_CSV)
+    groups = df_full["uniprot"].values
+
+    models = make_models()
     metrics_rows, all_preds = [], []
 
     for name, model in models.items():
-        print(f"\n--- {name} ---")
-        y_pred, y_proba, records = loocv_evaluate(model, X, y, pdb_ids, name)
+        print(f"\n--- {name} (Leave-One-Protein-Out, 4 folds) ---")
+        y_pred, y_proba, records = loocv_evaluate(model, X, y, pdb_ids, name, groups=groups)
         all_preds.extend(records)
 
         acc = accuracy_score(y, y_pred)
