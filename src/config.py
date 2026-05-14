@@ -18,16 +18,21 @@ ENTREZ_EMAIL = "alexacz1@uci.edu"
 LABEL_MAP = {0: "single_protofilament", 1: "multi_protofilament"}
 
 PDB_TO_UNIPROT = {
-    "7Q4B": "P05067",
-    "2NAO": "P05067",
-    "6W06": "P05067",
-    "2M4J": "P05067",
-    "8RRR": "P37840",
+    # α-synuclein
+    "9KAL": "P37840",
     "6XYO": "P37840",
+    # Tau
     "7P6A": "P10636",
     "5O3L": "P10636",
-    "7P0V": "P61769",
-    "6GK3": "P61769",
+    # β-lactoglobulin
+    "9IAH": "P02754",
+    "9JHF": "P02754",
+    # hnRNPA1
+    "9GKF": "P09651",
+    "7ZJ2": "P09651",
+    # Prion protein (PRNP)
+    "7LNA": "P04156",
+    "7YAT": "P04156",
 }
 
 HYDROPHOBIC = set("AILMFWVY")
