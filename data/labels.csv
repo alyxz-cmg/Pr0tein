@@ -4,7 +4,7 @@ pdb_id,protein,variant,morphology,n_protofilaments,label,source,notes
 7P6A,Tau,3R,single,1,0,Pick's disease,Single protofilament (verified clean)
 5O3L,Tau,3R/4R,multi,2,1,Alzheimer's disease,Paired helical filament (PHF) doublet
 9IAH,Beta-lactoglobulin,WT,single,1,0,Cryo-EM,Single protofilament
-9JHF,Beta-lactoglobulin,WT,multi,2,1,Cryo-EM,Doublet
+9JHG,Beta-lactoglobulin,WT,multi,2,1,Cryo-EM,Doublet
 9GKF,hnRNPA1,WT,single,1,0,Cryo-EM,Single protofilament
 7ZJ2,hnRNPA1,WT,multi,2,1,Cryo-EM,Doublet
 7LNA,Prion,WT,single,1,0,Cryo-EM,Single protofilament

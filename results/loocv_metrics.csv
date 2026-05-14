@@ -1,5 +1,5 @@
 model,accuracy,f1,roc_auc
+LogisticRegression,0.6,0.5,0.62
 Majority,0.5,0.0,0.5
-LogisticRegression,0.5,0.4444444444444444,0.64
-RandomForest,0.4,0.4,0.32
-DecisionTree,0.3,0.0,0.3
+DecisionTree,0.5,0.5454545454545454,0.5
+RandomForest,0.5,0.4444444444444444,0.54

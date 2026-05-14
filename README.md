@@ -33,13 +33,13 @@ amyloidogenic sequence will assemble as a **single protofilament** or
 
 10 PDB entries, balanced 5 single / 5 multi across 5 amyloidogenic proteins:
 
-| Protein | Single (label=0) | Multi (label=1) |
-|---------|------------------|-----------------|
-| Amyloid-β (1-42) | **7Q4B** (brain Type I) | **2NAO** (double-horseshoe doublet) |
-| Amyloid-β (1-40) | **6W06** (in vitro) | **2M4J** (3-fold triplet) |
-| α-Synuclein | **8RRR** (Lewy fold) | **6XYO** (MSA Type I doublet) |
-| Tau | **7P6A** (Pick's disease) | **5O3L** (PHF doublet) |
-| β2-Microglobulin | **7P0V** | **6GK3** (doublet) |
+| Protein | UniProt | Single (label=0) | Multi (label=1) |
+|---------|---------|------------------|-----------------|
+| α-synuclein | P37840 | **9KAL** | **6XYO** (MSA Type I doublet) |
+| Tau (3R/4R) | P10636 | **7P6A** (Pick's disease) | **5O3L** (PHF doublet) |
+| β-lactoglobulin | P02754 | **9IAH** | **9JHG** (doublet) |
+| hnRNPA1 | P09651 | **9GKF** | **7ZJ2** (doublet) |
+| Prion (PRNP) | P04156 | **7LNA** | **7YAT** (tetra-protofilament) |
 
 Full metadata is in [`data/labels.csv`](data/labels.csv).
 

@@ -26,7 +26,7 @@ PDB_TO_UNIPROT = {
     "5O3L": "P10636",
     # β-lactoglobulin
     "9IAH": "P02754",
-    "9JHF": "P02754",
+    "9JHG": "P02754",
     # hnRNPA1
     "9GKF": "P09651",
     "7ZJ2": "P09651",

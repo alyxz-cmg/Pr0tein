@@ -1,70 +1,71 @@
 # Amyloid Fibril Morphology Predictor — Results Report
 
-*Auto-generated 2026-05-13 11:01*
+*Auto-generated 2026-05-13 21:16*
 
 ## 1. Dataset
-  
+
 - **N samples:** 10
 - **Class balance:** {0: np.int64(5), 1: np.int64(5)}
 - **Feature matrix:** `data/processed/features.csv` (54 columns)
 - **Dropped due to Step-2 extraction limits:** `plddt_mean`, `plddt_median`,
-    `frac_disordered` (AF v6 mmCIF format change — pLDDT lives in a separate
-    metric block).
+`frac_disordered` (AF v6 mmCIF format change — pLDDT lives in a separate
+metric block).
 
 ## 2. Validation Scheme
 
 - **Leave-One-Out Cross-Validation (LOOCV)** — 10 folds, deterministic, no
-    random seed bias. Selected because n=10 makes k-fold splits highly
-    sensitive to test-set composition (the deep-research report flags
-    *"data scarcity"* and *"overfitting"* as primary risks; LOOCV is the
-    canonical mitigation for both).
+random seed bias. Selected because n=10 makes k-fold splits highly
+sensitive to test-set composition (the deep-research report flags
+*"data scarcity"* and *"overfitting"* as primary risks; LOOCV is the
+canonical mitigation for both).
 
 ## 3. LOOCV Metrics
 
 | model              |   accuracy |    f1 |   roc_auc |
 |:-------------------|-----------:|------:|----------:|
+| LogisticRegression |      0.600 | 0.500 |     0.620 |
 | Majority           |      0.500 | 0.000 |     0.500 |
-| LogisticRegression |      0.500 | 0.444 |     0.640 |
-| RandomForest       |      0.400 | 0.400 |     0.320 |
-| DecisionTree       |      0.300 | 0.000 |     0.300 |
+| DecisionTree       |      0.500 | 0.545 |     0.500 |
+| RandomForest       |      0.500 | 0.444 |     0.540 |
 
-**Best model: `Majority`** (Accuracy = 0.500, F1 = 0.000, ROC-AUC = 0.500).
+**Best model: `LogisticRegression`** (Accuracy = 0.600,
+F1 = 0.500, ROC-AUC = 0.620).
 
 ### Per-model accuracy
 | model              |   accuracy |
 |:-------------------|-----------:|
-| DecisionTree       |      0.300 |
-| LogisticRegression |      0.500 |
+| DecisionTree       |      0.500 |
+| LogisticRegression |      0.600 |
 | Majority           |      0.500 |
-| RandomForest       |      0.400 |
+| RandomForest       |      0.500 |
 
 ## 4. Misclassified Examples (Student A — biological review)
 
 | model              | pdb_id   |   y_true |   y_pred |   proba_multi |   correct |
 |:-------------------|:---------|---------:|---------:|--------------:|----------:|
-| DecisionTree       | 2M4J     |        1 |        0 |         0.000 |         0 |
-| DecisionTree       | 2NAO     |        1 |        0 |         0.000 |         0 |
 | DecisionTree       | 5O3L     |        1 |        0 |         0.000 |         0 |
-| DecisionTree       | 6GK3     |        1 |        0 |         0.000 |         0 |
-| DecisionTree       | 6W06     |        0 |        1 |         1.000 |         0 |
-| DecisionTree       | 6XYO     |        1 |        0 |         0.000 |         0 |
-| DecisionTree       | 7P0V     |        0 |        1 |         1.000 |         0 |
-| LogisticRegression | 5O3L     |        1 |        0 |         0.169 |         0 |
-| LogisticRegression | 6GK3     |        1 |        0 |         0.425 |         0 |
-| LogisticRegression | 6XYO     |        1 |        0 |         0.071 |         0 |
-| LogisticRegression | 7P0V     |        0 |        1 |         0.703 |         0 |
-| LogisticRegression | 7Q4B     |        0 |        1 |         0.955 |         0 |
-| Majority           | 2M4J     |        1 |        0 |         0.000 |         0 |
-| Majority           | 2NAO     |        1 |        0 |         0.000 |         0 |
+| DecisionTree       | 7LNA     |        0 |        1 |         1.000 |         0 |
+| DecisionTree       | 9GKF     |        0 |        1 |         1.000 |         0 |
+| DecisionTree       | 9JHG     |        1 |        0 |         0.000 |         0 |
+| DecisionTree       | 9KAL     |        0 |        1 |         1.000 |         0 |
+| LogisticRegression | 5O3L     |        1 |        0 |         0.449 |         0 |
+| LogisticRegression | 6XYO     |        1 |        0 |         0.020 |         0 |
+| LogisticRegression | 7LNA     |        0 |        1 |         0.879 |         0 |
+| LogisticRegression | 7ZJ2     |        1 |        0 |         0.297 |         0 |
 | Majority           | 5O3L     |        1 |        0 |         0.000 |         0 |
-| Majority           | 6GK3     |        1 |        0 |         0.000 |         0 |
 | Majority           | 6XYO     |        1 |        0 |         0.000 |         0 |
-| RandomForest       | 5O3L     |        1 |        0 |         0.294 |         0 |
-| RandomForest       | 6GK3     |        1 |        0 |         0.458 |         0 |
-| RandomForest       | 6W06     |        0 |        1 |         0.581 |         0 |
-| RandomForest       | 6XYO     |        1 |        0 |         0.423 |         0 |
-| RandomForest       | 7P0V     |        0 |        1 |         0.577 |         0 |
-| RandomForest       | 7Q4B     |        0 |        1 |         0.547 |         0 |
+| Majority           | 7YAT     |        1 |        0 |         0.000 |         0 |
+| Majority           | 7ZJ2     |        1 |        0 |         0.000 |         0 |
+| Majority           | 9JHG     |        1 |        0 |         0.000 |         0 |
+| RandomForest       | 5O3L     |        1 |        0 |         0.427 |         0 |
+| RandomForest       | 6XYO     |        1 |        0 |         0.392 |         0 |
+| RandomForest       | 7LNA     |        0 |        1 |         0.513 |         0 |
+| RandomForest       | 9GKF     |        0 |        1 |         0.530 |         0 |
+| RandomForest       | 9JHG     |        1 |        0 |         0.450 |         0 |
+
+> TODO: examine the structural details of the misses
+> above. Are they "twisted vs. flat" doublets? Brain-derived vs. in vitro?
+> These outliers are the most informative entries for biological discussion.
 
 ## 5. Figures
 
@@ -79,8 +80,8 @@
 ![RF](feature_importance_RandomForest.png)
 
 ### SHAP — global
-![Beeswarm](shap_summary_Majority.png)
-![Bar](shap_bar_Majority.png)
+![Beeswarm](shap_summary_LogisticRegression.png)
+![Bar](shap_bar_LogisticRegression.png)
 
 ### SHAP — per-sample (Student A interpretation targets)
 ![Single](shap_force_single.png)

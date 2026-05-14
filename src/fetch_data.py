@@ -49,19 +49,39 @@ def fetch_fasta(pdb_id: str) -> str | None:
 
     return None
 
+RCSB_PDB = "https://files.rcsb.org/download/{pdb_id}.pdb"
+RCSB_CIF = "https://files.rcsb.org/download/{pdb_id}.cif"
+
+RCSB_PDB = "https://files.rcsb.org/download/{pdb_id}.pdb"
+RCSB_CIF = "https://files.rcsb.org/download/{pdb_id}.cif"
+
 
 def fetch_pdb(pdb_id: str) -> bool:
-    """Download PDB coordinate file from RCSB."""
-    out_path = STRUCT_DIR / f"{pdb_id}.pdb"
-    if out_path.exists():
+    """Download structure from RCSB. Try PDB format first, fall back to mmCIF
+    for large modern entries (e.g. 9JHF) where legacy PDB is unavailable."""
+    pdb_path = STRUCT_DIR / f"{pdb_id}.pdb"
+    cif_path = STRUCT_DIR / f"{pdb_id}.cif"
+    if pdb_path.exists() or cif_path.exists():
         return True
+
     try:
         r = requests.get(RCSB_PDB.format(pdb_id=pdb_id), timeout=60)
         if r.ok and r.text.startswith(("HEADER", "ATOM", "REMARK")):
-            out_path.write_text(r.text)
+            pdb_path.write_text(r.text)
             return True
     except requests.RequestException as e:
         print(f"[WARN] PDB fetch failed for {pdb_id}: {e}", file=sys.stderr)
+
+    try:
+        r = requests.get(RCSB_CIF.format(pdb_id=pdb_id), timeout=60)
+        if r.ok and "data_" in r.text[:200]:
+            cif_path.write_text(r.text)
+            print(f"  ℹ {pdb_id}: legacy PDB unavailable, fetched mmCIF instead",
+                  file=sys.stderr)
+            return True
+    except requests.RequestException as e:
+        print(f"[WARN] CIF fetch failed for {pdb_id}: {e}", file=sys.stderr)
+
     return False
 
 
